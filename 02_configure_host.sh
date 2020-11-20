@@ -43,7 +43,9 @@ if [[ "${IP_STACK}" != "v4" ]]; then
   # This comes from libvirt when trying to create the ostestbm network.
   for n in /proc/sys/net/ipv6/conf/* ; do
     if [ -f $n/accept_ra ]; then
-      sudo sysctl -w net.ipv6.conf.$(basename $n).accept_ra=2
+      # VLAN interfaces: iface.id -> iface/id
+      ifname=$(basename $n | tr . /)
+      sudo sysctl -w net.ipv6.conf.${ifname}.accept_ra=2
     fi
   done
 fi
